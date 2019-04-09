@@ -27,9 +27,8 @@ int main()
 		imshow("Webcam Stream", frame);
 	
 		char c = waitKey(10);
-		if (c == 27 || c == 'e' || c == 'Q')
+		if (c == 27 || c == 'q' || c == 'Q')
 			break; // stop capturing by pressing ESC
 		
-		std::cout << "lol";
 	}
 }
