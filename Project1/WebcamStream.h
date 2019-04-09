@@ -5,16 +5,13 @@
 #include <opencv2/highgui.hpp> 
 #include <opencv2/imgproc.hpp> 
 #include <vector>
-#include <thread>
-#include <mutex>
 
-extern std::mutex lok;
 
 class WebcamStream
 {
 public :
-	WebcamStream() {}
-	~WebcamStream() {}
+	WebcamStream() = default;
+	~WebcamStream() = default;
 	bool startStream();
 	bool retrieveFrame(bool display);
 
