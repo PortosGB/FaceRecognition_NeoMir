@@ -15,9 +15,9 @@ using namespace cv;
 int main()
 {
 	
-	WebcamStream ws;
+	//WebcamStream ws;
 	FaceDetection face_detection;
-	ws.startStream();
+	/*ws.startStream();
 	while (1)
 	{
 
@@ -30,5 +30,6 @@ int main()
 		if (c == 27 || c == 'q' || c == 'Q')
 			break; // stop capturing by pressing ESC
 		
-	}
+	}*/
+	face_detection.run();
 }

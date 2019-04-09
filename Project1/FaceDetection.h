@@ -15,6 +15,7 @@ public :
 	FaceDetection(FaceDetection &) = delete;
 	FaceDetection &operator=(FaceDetection &) = delete;
 
+	bool run();
 	cv::Mat detect_and_Draw(cv::Mat frame, bool display);
 
 private :

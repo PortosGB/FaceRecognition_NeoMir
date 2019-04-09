@@ -38,3 +38,27 @@ Mat FaceDetection::detect_and_Draw(Mat frame, bool display)
 	return frame;
 
 }
+
+bool FaceDetection::run()
+{
+	WebcamStream ws;
+
+	ws.startStream();
+	while (1)
+	{
+
+		if (!ws.retrieveFrame(false))
+		{
+			cout << "erreur retrieving frame !" << endl;
+			return false;
+		}
+		Mat frame = detect_and_Draw(ws.getFrame(), true);
+		imshow("Webcam Stream", frame);
+
+		char c = waitKey(10);
+		if (c == 27 || c == 'q' || c == 'Q')
+			break; // stop capturing by pressing ESC or q
+
+	}
+	return true;
+}
