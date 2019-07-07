@@ -97,13 +97,12 @@ class Recognition:
             if os.sep in name and "." in name:
                 name = name.split(os.sep)[-1].split('.')[0]
             if code == 1:
-                os.system(
-                    "echo \'OK: Identification succees: " + str(
-                        name) + " sucessfully identified-"+  dt + "\' > " + PATH_TO_RESULT_FILE)
-            elif code == 2:
+                os.system( "echo " + str(name)+ "-"+  dt + " > " + PATH_TO_RESULT_FILE)
+            '''elif code == 2:
                 os.system("echo 'KO: No known subject identified-" + dt +  "' > " > PATH_TO_RESULT_FILE)
             else:
                 os.system("echo 'KO: No face detected-" + dt  + "' > " + PATH_TO_RESULT_FILE)
+            '''
         except Exception as e:
             print(type(e))
             print(e.args)
