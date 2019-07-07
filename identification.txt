@@ -1,2 +1,2 @@
-OK: Identification succees: Quentin (Glasses On) sucessfully identified
+OK: Identification succees: faces/Quentin_Glasses.jpg sucessfully identified
 
