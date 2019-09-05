@@ -262,3 +262,6 @@ __pycache__/
 
 #identification result file
 *identification.txt
+
+#virtualenv
+venv/
