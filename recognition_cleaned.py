@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import os
 from pathlib import Path
+import datetime
 
 
 FACES_FILES_PATH = "."
@@ -17,9 +18,13 @@ class Recognition:
 
     _process_this_frame = True
     def __init__(self):
-        self._get_video_capture = cv2.VideoCapture(0)
+        # maybe this function calls will be moved out of the __init__ for performance purposes
+        self._get_video_capture = cv2.VideoCapture(0)  
+        self.load_know_faces()
 
-
+    '''
+        Function called at the start of the program that loads all the pictures in the FACES_FILE_PATH
+    '''
     def load_know_faces(self):
 
         for p in Path(FACES_FILES_PATH).glob('./faces/*'):
@@ -29,7 +34,7 @@ class Recognition:
                 current_face["image"] = face_recognition.load_image_file(p)
                 current_face["encoding"] = face_recognition.face_encodings(current_face["image"])[0]
                 self._faces.append(current_face)
-                print(p)
+                print(p) #temporary print of the loaded faces
 
 
     def process_image(self):
@@ -87,15 +92,17 @@ class Recognition:
 
     def write_result(self, code, name="No face detected"):
         try:
+            dt = str(datetime.datetime.now())
             print(name)
+            if os.sep in name and "." in name:
+                name = name.split(os.sep)[-1].split('.')[0]
             if code == 1:
-                os.system(
-                    "echo \'OK: Identification succees: " + str(
-                        name) + " sucessfully identified\\n\' > " + PATH_TO_RESULT_FILE)
-            elif code == 2:
-                os.system("echo 'KO: No known subject identified\n' > " + PATH_TO_RESULT_FILE)
+                os.system( "echo " + str(name)+ "-"+  dt + " > " + PATH_TO_RESULT_FILE)
+            '''elif code == 2:
+                os.system("echo 'KO: No known subject identified-" + dt +  "' > " > PATH_TO_RESULT_FILE)
             else:
-                os.system("echo 'KO: No face detected\n' > " + PATH_TO_RESULT_FILE)
+                os.system("echo 'KO: No face detected-" + dt  + "' > " + PATH_TO_RESULT_FILE)
+            '''
         except Exception as e:
             print(type(e))
             print(e.args)
@@ -109,8 +116,8 @@ class Recognition:
             right *= 4
             bottom *= 4
             left *= 4
-            if '/' in name and "." in name:
-                name = name.split("/")[-1].split('.')[0]
+            if os.sep in name and "." in name:
+                name = name.split(os.sep)[-1].split('.')[0]
             # Draw a box around the face
             cv2.rectangle(self._frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
@@ -126,7 +133,6 @@ class Recognition:
 
 
     def Run(self,  display : bool):
-        self.load_know_faces()
 
         while True:
             t.process_image()
