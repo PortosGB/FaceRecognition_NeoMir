@@ -84,7 +84,7 @@ class Recognition:
                     self.write_result(2, "Unknown")
                 self._face_names.append(str(name))
 
-        process_this_frame = not self._process_this_frame
+        _process_this_frame = not self._process_this_frame
 
     '''
         exact protocol TBD
