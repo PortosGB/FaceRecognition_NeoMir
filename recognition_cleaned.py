@@ -8,6 +8,7 @@ import datetime
 
 FACES_FILES_PATH = "."
 PATH_TO_RESULT_FILE = "identification.txt"
+REDUNDANCY_THRESHOLD = 10
 
 class Recognition:
     _faces = []
@@ -15,6 +16,7 @@ class Recognition:
     _frame = None
     _face_locations = []
     _face_names = []
+    _match_to_be_confirmed = ["NULL", 0]
 
     _process_this_frame = True
     def __init__(self):
@@ -35,6 +37,22 @@ class Recognition:
                 current_face["encoding"] = face_recognition.face_encodings(current_face["image"])[0]
                 self._faces.append(current_face)
                 print(p) #temporary print of the loaded faces
+
+    '''
+        Function called when a match is found, it catches the writeResult and make sure that the match occurs at least 
+        REDUNDANCY_THRESHOLD times in a row before transmitting the match to the mirror client via PATH_TO_RESULT_FILE
+    '''
+    def redundancy_filter(self, name):
+        if self._match_to_be_confirmed[0] in ["NULL", name]:
+            self._match_to_be_confirmed[1] += 1
+            self._match_to_be_confirmed[0] = name
+            if self._match_to_be_confirmed[1] == REDUNDANCY_THRESHOLD:
+                self.write_result(1, str(name))
+                print(self._match_to_be_confirmed[1])
+        else:
+            self._match_to_be_confirmed[1] = 0
+            self._match_to_be_confirmed[0] = name
+
 
 
     def process_image(self):
@@ -79,9 +97,11 @@ class Recognition:
                 best_match_index = np.argmin(face_distances)   #do some tests here to prevent false positve !!!!!!!!!!!!
                 if matches[best_match_index]:
                     name = [d['name'] for d in self._faces][best_match_index]
-                    self.write_result(1, str(name))
+                    self.redundancy_filter(name)
+                    #self.write_result(1, str(name))
                 else:
-                    self.write_result(2, "Unknown")
+                    self.redundancy_filter("Unknown")
+                    #self.write_result(2, "Unknown")
                 self._face_names.append(str(name))
 
         _process_this_frame = not self._process_this_frame
