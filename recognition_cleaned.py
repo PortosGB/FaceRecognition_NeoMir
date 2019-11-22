@@ -7,8 +7,9 @@ import datetime
 
 
 FACES_FILES_PATH = "."
+PATH_TO_NEW_PICTURE = ".."
 PATH_TO_RESULT_FILE = "identification.txt"
-REDUNDANCY_THRESHOLD = 10
+REDUNDANCY_THRESHOLD = 13
 
 class Recognition:
     _faces = []
@@ -151,9 +152,22 @@ class Recognition:
 
         # Hit 'q' on the keyboard to quit!
 
+    def check_if_face(self):
+        for new_pic in Path(PATH_TO_NEW_PICTURE).glob('./new_pictures/*'):
+            if new_pic.is_file():
+                current_face = dict()
+                current_face["name"] = new_pic
+                current_face["image"] = face_recognition.load_image_file(new_pic)
+                if len(face_recognition.face_encodings(current_face["image"])) > 0:
+                    Path(new_pic).rename(FACES_FILES_PATH + '/faces/' + new_pic.name)
+                    current_face['name'] = FACES_FILES_PATH + '/faces/' + new_pic.name
+                    current_face["encoding"] = face_recognition.face_encodings(current_face["image"])[0]
+                    self._faces.append(current_face)
+                    print("New image:" + new_pic.name + " successfully loaded")
+                    return True
+        return False
 
     def Run(self,  display : bool):
-
         while True:
             t.process_image()
             if display:
@@ -167,4 +181,6 @@ class Recognition:
 
 if __name__ == '__main__':
     t = Recognition()
+    #t.Run(display=True)
+    t.check_if_face()
     t.Run(display=True)
