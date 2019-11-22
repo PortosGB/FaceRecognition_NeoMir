@@ -165,9 +165,11 @@ class Recognition:
                     self._faces.append(current_face)
                     print("New image:" + new_pic.name + " successfully loaded")
                     return True
+                print('Invalid picture: ' + new_pic.name)
+                new_pic.unlink()
         return False
 
-    def Run(self,  display : bool):
+    def Run(self,  display: bool):
         while True:
             t.process_image()
             if display:
@@ -183,4 +185,4 @@ if __name__ == '__main__':
     t = Recognition()
     #t.Run(display=True)
     t.check_if_face()
-    t.Run(display=True)
+    #t.Run(display=True)
